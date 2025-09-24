@@ -1,0 +1,103 @@
+version: '3.8'
+
+services:
+  # ===========================
+  # PostgreSQL Database Service
+  # ===========================
+  postgres:
+    image: postgres:15-alpine
+    container_name: containerized_api_postgres_dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_admin_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/01-init-db.sql:ro
+    networks:
+      - dev_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ===========================
+  # Node.js Application Service  
+  # ===========================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: containerized_api_app_dev
+    restart: unless-stopped
+    env_file:
+      - .env.development
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount source code for hot reload
+      - ./src:/app/src:ro
+      - ./package.json:/app/package.json:ro
+      - ./package-lock.json:/app/package-lock.json:ro
+      # Named volume for node_modules to avoid conflicts
+      - node_modules_dev:/app/node_modules
+      # Mount logs directory
+      - ./log:/app/log
+    networks:
+      - dev_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ===========================
+  # PgAdmin (Optional - Database GUI)
+  # ===========================
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: containerized_api_pgadmin_dev
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: pgadmin_password
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin_dev_data:/var/lib/pgadmin
+    networks:
+      - dev_network
+    depends_on:
+      - postgres
+    profiles:
+      - tools # Only start with --profile tools
+
+# ===========================
+# Networks
+# ===========================
+networks:
+  dev_network:
+    driver: bridge
+    name: containerized_api_dev_network
+
+# ===========================
+# Volumes
+# ===========================
+volumes:
+  postgres_dev_data:
+    name: containerized_api_postgres_dev_data
+  pgadmin_dev_data:
+    name: containerized_api_pgadmin_dev_data
+  node_modules_dev:
+    name: containerized_api_node_modules_dev

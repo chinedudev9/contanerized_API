@@ -46,3 +46,6 @@
 {"level":"info","message":"Hello containerized","service":"containerizedapi"}
 {"level":"info","message":"::1 - - [23/Sep/2025:20:26:25 +0000] \"GET / HTTP/1.1\" 304 - \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0\"","service":"containerizedapi"}
 {"level":"info","message":"::1 - - [23/Sep/2025:20:26:25 +0000] \"GET /favicon.ico HTTP/1.1\" 404 150 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0\"","service":"containerizedapi"}
+{"level":"info","message":"Hello containerized","service":"containerizedapi"}
+{"level":"info","message":"::1 - - [24/Sep/2025:11:09:45 +0000] \"GET / HTTP/1.1\" 304 - \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0\"","service":"containerizedapi"}
+{"level":"info","message":"::1 - - [24/Sep/2025:11:09:45 +0000] \"GET /favicon.ico HTTP/1.1\" 404 150 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0\"","service":"containerizedapi"}

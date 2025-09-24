@@ -24,7 +24,12 @@ app.get('/', (req, res) => {
 })
 
 app.get('/health', (req, res) => {
-    res.status(200).json({ status: "OK", timestamp: new DATE().toISOString(), uptime: process.uptime() })
+    res.status(200).json({ 
+        status: "OK", 
+        timestamp: new Date().toISOString(), 
+        uptime: process.uptime(),
+        environment: process.env.NODE_ENV || 'development'
+    })
 })
 
 app.get('/api', (req, res) => {

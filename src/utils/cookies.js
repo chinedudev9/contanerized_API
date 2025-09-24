@@ -1,7 +1,13 @@
 export const cookies = {
-  getOptions: () => ({sameSite: 'strict'}),
+  getOptions: () => ({
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    maxAge: 24 * 60 * 60 * 1000 // 1 day
+  }),
+  
   set: (res, name, value, options = {}) => {
-    res.cookies(name, value, { ...cookies.getOptions(), ...options });
+    res.cookie(name, value, { ...cookies.getOptions(), ...options });
   },
   
   clear: (res, name, options = {}) => {
@@ -9,6 +15,6 @@ export const cookies = {
   },
 
   get: (req, name) => {
-    return request.cookies[name];
+    return req.cookies[name];
   }
 }
